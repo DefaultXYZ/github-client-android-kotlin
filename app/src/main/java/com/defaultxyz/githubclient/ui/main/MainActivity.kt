@@ -1,7 +1,8 @@
-package com.defaultxyz.githubclient
+package com.defaultxyz.githubclient.ui.main
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import com.defaultxyz.githubclient.R
 
 class MainActivity : AppCompatActivity() {
 
