@@ -10,11 +10,13 @@
         android:id="@+id/search_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
+        android:imeOptions="actionDone"
         app:iconifiedByDefault="false"
-        app:queryHint="Search user or repository"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Search user or repository" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/result_list"
