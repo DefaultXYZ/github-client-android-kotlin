@@ -1,5 +1,8 @@
 package com.defaultxyz.githubclient.ui.main
 
+import com.defaultxyz.githubclient.model.Repository
+import com.defaultxyz.githubclient.model.User
+
 interface MainContract {
     interface View {
         fun requestUsers(query: String)
@@ -10,8 +13,8 @@ interface MainContract {
     interface Presenter {
         fun onQueryChanged(query: String?)
         fun attachView(view: View)
-        fun detachView(view: View)
-        fun onUsersReceived(users: List<Any>)
-        fun onRepositoriesReceived(repositories: List<Any>)
+        fun detachView()
+        fun onUsersReceived(users: List<User>)
+        fun onRepositoriesReceived(repositories: List<Repository>)
     }
 }

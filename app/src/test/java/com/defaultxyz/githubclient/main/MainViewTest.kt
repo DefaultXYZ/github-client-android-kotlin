@@ -108,7 +108,7 @@ class MainViewTest {
     @Test
     fun onPause_shouldDetachPresenter() {
         controller.pause()
-        verify(presenter).detachView(activity)
+        verify(presenter).detachView()
     }
 
     @Test
