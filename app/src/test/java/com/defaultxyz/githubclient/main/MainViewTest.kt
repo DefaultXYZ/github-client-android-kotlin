@@ -4,19 +4,19 @@ import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import com.defaultxyz.githubclient.R
-import com.defaultxyz.githubclient.network.RestFunctions
-import com.defaultxyz.githubclient.network.RestKeys
+import com.defaultxyz.githubclient.model.Repository
+import com.defaultxyz.githubclient.model.User
+import com.defaultxyz.githubclient.network.RestFunction
+import com.defaultxyz.githubclient.network.RestKey
 import com.defaultxyz.githubclient.network.RestService
 import com.defaultxyz.githubclient.ui.main.MainActivity
 import com.defaultxyz.githubclient.ui.main.MainContract
+import com.nhaarman.mockito_kotlin.*
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
-import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
@@ -30,14 +30,15 @@ class MainViewTest {
     private lateinit var searchView: SearchView
     private lateinit var resultList: RecyclerView
 
-    @Mock lateinit var presenter: MainContract.Presenter
+    @Mock private lateinit var presenter: MainContract.Presenter
 
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         controller = Robolectric.buildActivity(MainActivity::class.java)
-                .create().start()
+                .create().start().visible()
         activity = controller.get()
+        mockResponses()
         activity.presenter = presenter
         searchView = activity.findViewById(R.id.search_view)
         resultList = activity.findViewById(R.id.result_list)
@@ -50,55 +51,42 @@ class MainViewTest {
     }
 
     @Test
-    fun onSearch_shouldLoadUsers() {
+    fun onSearch_shouldSendRequest() {
         searchView.setQuery("a", false)
 
         val expectedIntent = Intent(activity, RestService::class.java)
-        expectedIntent.action = RestService.ACTION
-        expectedIntent.putExtra(RestKeys.FUNCTION, RestFunctions.GET_USERS)
+        val expectedAction = RestService.ACTION
+        val expectedFunction = RestFunction.SEARCH
         val actualIntent = ShadowApplication.getInstance().nextStartedService
 
         assertEquals(expectedIntent.component, actualIntent.component)
-        assertEquals(expectedIntent.action, actualIntent.action)
-        assertEquals(RestFunctions.GET_USERS, actualIntent.extras.getString(RestKeys.FUNCTION))
-    }
-
-    @Test
-    fun onSearch_shouldLoadRepositories() {
-        searchView.setQuery("a", false)
-
-        val expectedIntent = Intent(activity, RestService::class.java)
-        expectedIntent.action = RestService.ACTION
-        expectedIntent.putExtra(RestKeys.FUNCTION, RestFunctions.GET_REPOSITORIES)
-        val actualIntent = ShadowApplication.getInstance().nextStartedService
-
-        assertEquals(expectedIntent.component, actualIntent.component)
-        assertEquals(expectedIntent.action, actualIntent.action)
-        assertEquals(RestFunctions.GET_REPOSITORIES, actualIntent.extras.getString(RestKeys.FUNCTION))
+        assertEquals(expectedAction, actualIntent.action)
+        assertEquals(expectedFunction, actualIntent.extras.getSerializable(RestKey.FUNCTION))
     }
 
     @Test
     fun onDataReceived_shouldUpdateUi() {
-        searchView.setQuery("a", false)
+        presenter.onDataReceived(any())
         assertEquals(3, resultList.adapter.itemCount)
     }
 
     @Test
     fun onListUpdate_shouldHaveUsers() {
-        searchView.setQuery("a", false)
+        presenter.onDataReceived(any())
         val userViewType = 0
         assertEquals(userViewType, resultList.adapter.getItemViewType(0))
     }
 
     @Test
     fun onListUpdate_shouldHaveRepositories() {
-        searchView.setQuery("a", false)
+        presenter.onDataReceived(any())
         val repoViewType = 1
-        assertEquals(repoViewType, resultList.adapter.getItemViewType(0))
+        assertEquals(repoViewType, resultList.adapter.getItemViewType(1))
     }
 
     @Test
     fun onUserClick_shouldOpenUserDetails() {
+        presenter.onDataReceived(any())
         resultList.getChildAt(0).performClick()
         val expectedIntent = Intent()
         val actualIntent = ShadowApplication.getInstance().nextStartedActivity
@@ -114,6 +102,16 @@ class MainViewTest {
     @Test
     fun onResume_shouldAttachPresenter() {
         controller.pause().resume()
-        verify(presenter, any()).attachView(activity)
+        verify(presenter, atLeastOnce()).attachView(activity)
+    }
+
+    private fun mockResponses() {
+        val mockList = listOf(
+                User(0, "Aaa"),
+                Repository(1, "Comp/Aba"),
+                User(2, "Acde")
+        )
+        whenever(presenter.onDataReceived(any())).then { activity.updateUi(mockList) }
+        whenever(presenter.onQueryChanged(any())).then { activity.requestData("a") }
     }
 }

@@ -35,28 +35,19 @@ class MainPresenterTest {
     @Test
     fun onQueryChanged_shouldRequestUsers() {
         presenter.onQueryChanged("a")
-        verify(mockView).requestUsers("a")
-    }
-
-    @Test
-    fun onQueryChanged_shouldRequestRepositories() {
-        presenter.onQueryChanged("a")
-        verify(mockView).requestRepositories("a")
+        verify(mockView).requestData("a")
     }
 
     @Test
     fun onDataReceived_shouldSortAscending() {
-        val users = listOf(
+        val data = listOf(
                 User(124, "AAA"),
-                User(542, "ABB")
-        )
-        val repositories = listOf(
+                User(542, "ABB"),
                 Repository(765, "Comp/AC"),
                 Repository(324, "Comp/AD")
         )
 
-        presenter.onUsersReceived(users)
-        presenter.onRepositoriesReceived(repositories)
+        presenter.onDataReceived(data)
 
         val expectedList = listOf(
                 User(124, "AAA"),
@@ -74,7 +65,6 @@ class MainPresenterTest {
     }
 
     private fun mockResponses() {
-        whenever(mockView.requestUsers("a")).then { presenter.onUsersReceived(emptyList()) }
-        whenever(mockView.requestRepositories("a")).then { presenter.onUsersReceived(emptyList()) }
+        whenever(mockView.requestData("a")).then { presenter.onDataReceived(emptyList()) }
     }
 }

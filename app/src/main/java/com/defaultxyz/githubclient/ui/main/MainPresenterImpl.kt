@@ -1,12 +1,9 @@
 package com.defaultxyz.githubclient.ui.main
 
 import com.defaultxyz.githubclient.model.DataItem
-import com.defaultxyz.githubclient.model.Repository
-import com.defaultxyz.githubclient.model.User
 
 class MainPresenterImpl : MainContract.Presenter {
     private var view: MainContract.View? = null
-    private val data: MutableList<DataItem> = mutableListOf()
 
     override fun attachView(view: MainContract.View) {
         this.view = view
@@ -18,19 +15,11 @@ class MainPresenterImpl : MainContract.Presenter {
 
     override fun onQueryChanged(query: String?) {
         if (query == null) return
-        view?.requestUsers(query)
-        view?.requestRepositories(query)
+        view?.requestData(query)
     }
 
-    override fun onUsersReceived(users: List<User>) {
-        data.addAll(users)
-        data.sortBy { it.id }
-        view?.updateUi(data)
-    }
-
-    override fun onRepositoriesReceived(repositories: List<Repository>) {
-        data.addAll(repositories)
-        data.sortBy { it.id }
-        view?.updateUi(data)
+    override fun onDataReceived(data: List<DataItem>) {
+        val sortedData = data.sortedBy { it.id }
+        view?.updateUi(sortedData)
     }
 }
