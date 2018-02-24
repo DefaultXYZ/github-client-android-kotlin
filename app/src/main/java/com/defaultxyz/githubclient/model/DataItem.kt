@@ -1,3 +1,3 @@
 package com.defaultxyz.githubclient.model
 
-abstract class DataItem(open val id: Long)
+abstract class DataItem(open val id: Long, val title: String)
