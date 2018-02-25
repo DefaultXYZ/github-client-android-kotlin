@@ -1,7 +1,9 @@
 package com.defaultxyz.githubclient.ui.main.utils
 
 import android.content.Context
+import android.content.Intent
 import android.support.annotation.LayoutRes
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import com.defaultxyz.githubclient.R
 import com.defaultxyz.githubclient.model.DataItem
 import com.defaultxyz.githubclient.model.Repository
 import com.defaultxyz.githubclient.model.User
+import com.defaultxyz.githubclient.ui.details.DetailsActivity
 
 class ResultAdapter(private val context: Context): RecyclerView.Adapter<ResultAdapter.DataItemHolder>() {
     private var data: List<DataItem> = emptyList()
@@ -30,6 +33,12 @@ class ResultAdapter(private val context: Context): RecyclerView.Adapter<ResultAd
         val item = data[position]
         if (holder == null) return
         holder.title.text = item.title
+        if (item is User) {
+            holder.container.setOnClickListener {
+                val intent = Intent(context, DetailsActivity::class.java)
+                context.startActivity(intent)
+            }
+        }
     }
 
     override fun getItemCount(): Int {
@@ -41,6 +50,7 @@ class ResultAdapter(private val context: Context): RecyclerView.Adapter<ResultAd
     }
 
     inner class DataItemHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val container: ConstraintLayout = view as ConstraintLayout
         val title: TextView = view.findViewById(R.id.title)
     }
 

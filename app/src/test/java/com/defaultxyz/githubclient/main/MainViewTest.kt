@@ -10,6 +10,7 @@ import com.defaultxyz.githubclient.model.User
 import com.defaultxyz.githubclient.network.RestFunction
 import com.defaultxyz.githubclient.network.RestKey
 import com.defaultxyz.githubclient.network.RestService
+import com.defaultxyz.githubclient.ui.details.DetailsActivity
 import com.defaultxyz.githubclient.ui.main.MainActivity
 import com.defaultxyz.githubclient.ui.main.MainContract
 import com.nhaarman.mockito_kotlin.*
@@ -89,7 +90,7 @@ class MainViewTest {
     fun onUserClick_shouldOpenUserDetails() {
         onDataLoaded()
         resultList.getChildAt(0).performClick()
-        val expectedIntent = Intent()
+        val expectedIntent = Intent(activity, DetailsActivity::class.java)
         val actualIntent = ShadowApplication.getInstance().nextStartedActivity
         assertEquals(expectedIntent.component, actualIntent.component)
     }
