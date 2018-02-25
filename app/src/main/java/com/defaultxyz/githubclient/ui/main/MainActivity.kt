@@ -6,6 +6,8 @@ import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -24,10 +26,11 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Res
         SearchView.OnQueryTextListener {
     @BindView(R.id.search_view) lateinit var searchView: SearchView
     @BindView(R.id.result_list) lateinit var resultList: RecyclerView
+    @BindView(R.id.progress_bar) lateinit var progressBar: ProgressBar
 
     @Inject lateinit var presenter: MainContract.Presenter
 
-    var searchDelay = 5000L
+    var searchDelay = 1000L
     private val searchHandler = Handler()
     private lateinit var adapter: ResultAdapter
     private var searchTask: Runnable? = null
@@ -57,6 +60,7 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Res
         if (function == RestFunction.SEARCH) {
             val data = intent.getParcelableArrayListExtra<DataItem>(RestKey.DATA_STRING)
             presenter.onDataReceived(data)
+            setLoading(false)
         }
     }
 
@@ -77,6 +81,11 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Res
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
+        if (newText == "") {
+            setLoading(false)
+            return true
+        }
+        setLoading(true)
         if (searchTask != null)
             searchHandler.removeCallbacks(searchTask)
         searchTask = Runnable { presenter.onQueryChanged(newText) }
@@ -85,11 +94,15 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Res
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        return true
+        return false
     }
 
     override fun updateUi(list: List<DataItem>) {
         adapter.setData(list)
         adapter.notifyDataSetChanged()
+    }
+
+    private fun setLoading(isLoad: Boolean) {
+        progressBar.visibility = if (isLoad) View.VISIBLE else View.INVISIBLE
     }
 }

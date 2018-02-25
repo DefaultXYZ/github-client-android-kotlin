@@ -7,9 +7,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface RetrofitClient {
-    @GET("search/users")
+    @GET("search/users?per_page=100")
     fun searchUsers(@Query("q") query: String): Call<SearchUserResponse>
 
-    @GET("search/repositories")
+    @GET("search/repositories?per_page=100")
     fun searchRepositories(@Query("q") query: String): Call<SearchRepositoryResponse>
 }
