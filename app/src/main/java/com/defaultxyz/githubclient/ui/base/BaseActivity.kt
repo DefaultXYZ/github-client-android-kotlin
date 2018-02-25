@@ -24,14 +24,14 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (this is RestListener)
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(restReceiver)
+            LocalBroadcastManager.getInstance(this)
+                    .registerReceiver(restReceiver, intentFilter)
     }
 
     override fun onPause() {
         super.onPause()
         if (this is RestListener)
-            LocalBroadcastManager.getInstance(this)
-                    .registerReceiver(restReceiver, intentFilter)
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(restReceiver)
     }
 
     override fun onDestroy() {
@@ -44,7 +44,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val intent = Intent(this, RestService::class.java)
         intent.action = RestService.ACTION
         intent.putExtra(RestKey.FUNCTION, function)
-        intent.putExtra(RestKey.DATA, data)
+        intent.putExtra(RestKey.DATA_STRING, data)
         startService(intent)
     }
 }

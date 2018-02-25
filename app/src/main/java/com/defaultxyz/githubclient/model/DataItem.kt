@@ -1,7 +1,6 @@
 package com.defaultxyz.githubclient.model
 
-import paperparcel.PaperParcelable
+import android.os.Parcelable
 
-abstract class DataItem(open val id: Long) : PaperParcelable {
-    abstract var title: String
-}
+abstract class DataItem(open val id: Long,
+                        val title: String): Parcelable

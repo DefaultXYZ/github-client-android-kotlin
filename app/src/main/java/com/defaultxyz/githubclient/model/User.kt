@@ -1,13 +1,33 @@
 package com.defaultxyz.githubclient.model
 
-import paperparcel.PaperParcel
+import android.os.Parcel
+import android.os.Parcelable
 
-@PaperParcel
-data class User(override val id: Long,
-                val login: String) : DataItem(id) {
-    override var title: String = login
+data class User(override var id: Long,
+                val login: String) : DataItem(id, login) {
+
+    override fun writeToParcel(dest: Parcel?, flags: Int) {
+        dest?.writeLong(id)
+        dest?.writeString(login)
+        dest?.writeString(title)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
 
     companion object {
-        @JvmStatic val CREATOR = PaperParcelUser.CREATOR
+        @JvmField val CREATOR = object : Parcelable.Creator<User> {
+            override fun createFromParcel(src: Parcel?): User {
+                val id = src?.readLong() ?: 0
+                val login = src?.readString() ?: ""
+                return User(id, login)
+            }
+
+            override fun newArray(size: Int): Array<User> {
+                return arrayOf()
+            }
+        }
     }
+
 }

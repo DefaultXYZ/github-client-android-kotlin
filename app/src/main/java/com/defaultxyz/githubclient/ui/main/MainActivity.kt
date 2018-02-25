@@ -50,7 +50,7 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Res
 
     override fun onReceive(function: RestFunction, intent: Intent) {
         if (function == RestFunction.SEARCH) {
-            val data = intent.getParcelableArrayListExtra<DataItem>(RestKey.DATA)
+            val data = intent.getParcelableArrayListExtra<DataItem>(RestKey.DATA_STRING)
             presenter.onDataReceived(data)
         }
     }
