@@ -1,3 +1,7 @@
 package com.defaultxyz.githubclient.model
 
-abstract class DataItem(open val id: Long, val title: String)
+import paperparcel.PaperParcelable
+
+abstract class DataItem(open val id: Long) : PaperParcelable {
+    abstract var title: String
+}
