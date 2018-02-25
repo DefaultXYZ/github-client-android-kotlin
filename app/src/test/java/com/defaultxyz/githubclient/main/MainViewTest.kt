@@ -4,6 +4,7 @@ import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import com.defaultxyz.githubclient.R
+import com.defaultxyz.githubclient.model.DataItem
 import com.defaultxyz.githubclient.model.Repository
 import com.defaultxyz.githubclient.model.User
 import com.defaultxyz.githubclient.network.RestFunction
@@ -66,27 +67,27 @@ class MainViewTest {
 
     @Test
     fun onDataReceived_shouldUpdateUi() {
-        presenter.onDataReceived(any())
+        onDataLoaded()
         assertEquals(3, resultList.adapter.itemCount)
     }
 
     @Test
     fun onListUpdate_shouldHaveUsers() {
-        presenter.onDataReceived(any())
+        onDataLoaded()
         val userViewType = 0
         assertEquals(userViewType, resultList.adapter.getItemViewType(0))
     }
 
     @Test
     fun onListUpdate_shouldHaveRepositories() {
-        presenter.onDataReceived(any())
+        onDataLoaded()
         val repoViewType = 1
         assertEquals(repoViewType, resultList.adapter.getItemViewType(1))
     }
 
     @Test
     fun onUserClick_shouldOpenUserDetails() {
-        presenter.onDataReceived(any())
+        onDataLoaded()
         resultList.getChildAt(0).performClick()
         val expectedIntent = Intent()
         val actualIntent = ShadowApplication.getInstance().nextStartedActivity
@@ -106,12 +107,21 @@ class MainViewTest {
     }
 
     private fun mockResponses() {
-        val mockList = listOf(
+        whenever(presenter.onDataReceived(any())).then {
+            val dataList = (it.arguments[0] as List<*>).filterIsInstance<DataItem>()
+            activity.updateUi(dataList)
+        }
+        whenever(presenter.onQueryChanged(any())).then { activity.requestData("a") }
+    }
+
+    private fun onDataLoaded() {
+        val mockList = arrayListOf(
                 User(0, "Aaa"),
                 Repository(1, "Comp/Aba"),
                 User(2, "Acde")
         )
-        whenever(presenter.onDataReceived(any())).then { activity.updateUi(mockList) }
-        whenever(presenter.onQueryChanged(any())).then { activity.requestData("a") }
+        val intent = Intent()
+        intent.putParcelableArrayListExtra(RestKey.DATA, mockList)
+        activity.onReceive(RestFunction.SEARCH, intent)
     }
 }

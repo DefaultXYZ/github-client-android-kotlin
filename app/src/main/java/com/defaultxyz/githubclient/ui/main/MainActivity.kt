@@ -1,5 +1,6 @@
 package com.defaultxyz.githubclient.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -9,13 +10,16 @@ import butterknife.ButterKnife
 import com.defaultxyz.githubclient.R
 import com.defaultxyz.githubclient.model.DataItem
 import com.defaultxyz.githubclient.network.RestFunction
+import com.defaultxyz.githubclient.network.RestKey
+import com.defaultxyz.githubclient.network.RestListener
 import com.defaultxyz.githubclient.ui.MainApplication
 import com.defaultxyz.githubclient.ui.base.BaseActivity
 import com.defaultxyz.githubclient.ui.main.utils.ResultAdapter
 import com.defaultxyz.githubclient.ui.utils.DependencyComponent
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, SearchView.OnQueryTextListener {
+class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, RestListener,
+        SearchView.OnQueryTextListener {
     @BindView(R.id.search_view) lateinit var searchView: SearchView
     @BindView(R.id.result_list) lateinit var resultList: RecyclerView
 
@@ -42,6 +46,13 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Sea
     override fun onPause() {
         super.onPause()
         presenter.detachView()
+    }
+
+    override fun onReceive(function: RestFunction, intent: Intent) {
+        if (function == RestFunction.SEARCH) {
+            val data = intent.getParcelableArrayListExtra<DataItem>(RestKey.DATA)
+            presenter.onDataReceived(data)
+        }
     }
 
     override fun injectComponent(application: MainApplication) {
