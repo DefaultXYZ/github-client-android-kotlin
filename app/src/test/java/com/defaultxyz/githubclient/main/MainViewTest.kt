@@ -7,9 +7,9 @@ import com.defaultxyz.githubclient.R
 import com.defaultxyz.githubclient.model.DataItem
 import com.defaultxyz.githubclient.model.Repository
 import com.defaultxyz.githubclient.model.User
-import com.defaultxyz.githubclient.network.RestFunction
-import com.defaultxyz.githubclient.network.RestKey
-import com.defaultxyz.githubclient.network.RestService
+import com.defaultxyz.githubclient.network.service.RestFunction
+import com.defaultxyz.githubclient.network.service.RestKey
+import com.defaultxyz.githubclient.network.service.RestService
 import com.defaultxyz.githubclient.ui.details.DetailsActivity
 import com.defaultxyz.githubclient.ui.main.MainActivity
 import com.defaultxyz.githubclient.ui.main.MainContract
@@ -40,6 +40,7 @@ class MainViewTest {
         controller = Robolectric.buildActivity(MainActivity::class.java)
                 .create().start().visible()
         activity = controller.get()
+        activity.searchDelay = 0L
         mockResponses()
         activity.presenter = presenter
         searchView = activity.findViewById(R.id.search_view)

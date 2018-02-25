@@ -1,7 +1,7 @@
 package com.defaultxyz.githubclient.injection.core
 
 import com.defaultxyz.githubclient.injection.annotations.PerApplication
-import com.defaultxyz.githubclient.network.RestService
+import com.defaultxyz.githubclient.network.service.RestService
 import dagger.Component
 
 @PerApplication

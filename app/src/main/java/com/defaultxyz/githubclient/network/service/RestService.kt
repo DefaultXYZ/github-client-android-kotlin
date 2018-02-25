@@ -1,4 +1,4 @@
-package com.defaultxyz.githubclient.network
+package com.defaultxyz.githubclient.network.service
 
 import android.app.IntentService
 import android.content.Context
@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.support.v4.content.LocalBroadcastManager
 import com.defaultxyz.githubclient.model.DataItem
+import com.defaultxyz.githubclient.network.client.RestClient
 import com.defaultxyz.githubclient.ui.MainApplication
 import javax.inject.Inject
 
@@ -35,6 +36,7 @@ class RestService : IntentService("RestService") {
         currentFunction = intent.getSerializableExtra(RestKey.FUNCTION) as RestFunction
         if (intent.hasExtra(RestKey.DATA_STRING))
             dataString = intent.getStringExtra(RestKey.DATA_STRING)
+        resultIntent.putExtra(RestKey.FUNCTION, currentFunction)
     }
 
     private fun sendRequest() {
@@ -49,7 +51,6 @@ class RestService : IntentService("RestService") {
         val resultList: MutableList<DataItem> = mutableListOf()
         resultList.addAll(users)
         resultList.addAll(repositories)
-        resultIntent.putExtra(RestKey.FUNCTION, currentFunction)
         resultIntent.putParcelableArrayListExtra(RestKey.DATA_STRING, ArrayList(resultList))
     }
 
@@ -62,4 +63,14 @@ class RestService : IntentService("RestService") {
     companion object {
         const val ACTION = "com.defaultxyz.githubclient.RestService"
     }
+}
+
+object RestKey {
+    const val FUNCTION = "RestFunction"
+    const val ERROR = "RestError"
+    const val DATA_STRING = "RestDataString"
+}
+
+enum class RestFunction {
+    SEARCH
 }

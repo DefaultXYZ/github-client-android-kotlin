@@ -3,9 +3,9 @@ package com.defaultxyz.githubclient.injection.core
 import android.content.Context
 import com.defaultxyz.githubclient.R
 import com.defaultxyz.githubclient.injection.annotations.PerApplication
-import com.defaultxyz.githubclient.network.RestClient
-import com.defaultxyz.githubclient.network.RestClientImpl
-import com.defaultxyz.githubclient.network.RetrofitClient
+import com.defaultxyz.githubclient.network.client.RestClient
+import com.defaultxyz.githubclient.network.client.RestClientImpl
+import com.defaultxyz.githubclient.network.client.RetrofitClient
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

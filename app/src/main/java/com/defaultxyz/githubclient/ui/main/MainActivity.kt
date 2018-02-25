@@ -2,16 +2,18 @@ package com.defaultxyz.githubclient.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
+import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.defaultxyz.githubclient.R
 import com.defaultxyz.githubclient.model.DataItem
-import com.defaultxyz.githubclient.network.RestFunction
-import com.defaultxyz.githubclient.network.RestKey
-import com.defaultxyz.githubclient.network.RestListener
+import com.defaultxyz.githubclient.network.service.RestFunction
+import com.defaultxyz.githubclient.network.service.RestKey
+import com.defaultxyz.githubclient.network.service.RestListener
 import com.defaultxyz.githubclient.ui.MainApplication
 import com.defaultxyz.githubclient.ui.base.BaseActivity
 import com.defaultxyz.githubclient.ui.main.utils.ResultAdapter
@@ -25,7 +27,10 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Res
 
     @Inject lateinit var presenter: MainContract.Presenter
 
+    var searchDelay = 5000L
+    private val searchHandler = Handler()
     private lateinit var adapter: ResultAdapter
+    private var searchTask: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +60,10 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Res
         }
     }
 
+    override fun onError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
     override fun injectComponent(application: MainApplication) {
         application.buildMainComponent().inject(this)
     }
@@ -68,7 +77,10 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Res
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        presenter.onQueryChanged(newText)
+        if (searchTask != null)
+            searchHandler.removeCallbacks(searchTask)
+        searchTask = Runnable { presenter.onQueryChanged(newText) }
+        searchHandler.postDelayed(searchTask, searchDelay)
         return true
     }
 

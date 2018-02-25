@@ -1,4 +1,4 @@
-package com.defaultxyz.githubclient.network
+package com.defaultxyz.githubclient.network.client
 
 import com.defaultxyz.githubclient.model.SearchRepositoryResponse
 import com.defaultxyz.githubclient.model.SearchUserResponse

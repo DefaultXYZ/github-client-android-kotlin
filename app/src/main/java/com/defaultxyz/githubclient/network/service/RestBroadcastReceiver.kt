@@ -1,4 +1,4 @@
-package com.defaultxyz.githubclient.network
+package com.defaultxyz.githubclient.network.service
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -25,7 +25,8 @@ class RestBroadcastReceiver : BroadcastReceiver() {
     }
 
     private fun handleError(intent: Intent) {
-
+        val message = intent.getStringExtra(RestKey.ERROR)
+        listener?.onError(message)
     }
 
 }

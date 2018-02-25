@@ -21,10 +21,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".network.RestService" />
+        <service android:name=".network.service.RestService" />
 
         <receiver
-            android:name=".network.RestBroadcastReceiver"
+            android:name=".network.service.RestBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.defaultxyz.githubclient.RestService" />
