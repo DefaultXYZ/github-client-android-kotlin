@@ -123,7 +123,7 @@ class MainViewTest {
                 User(2, "Acde")
         )
         val intent = Intent()
-        intent.putParcelableArrayListExtra(RestKey.DATA_STRING, mockList)
+        intent.putParcelableArrayListExtra(RestKey.DATA, mockList)
         activity.onReceive(RestFunction.SEARCH, intent)
     }
 }

@@ -52,7 +52,7 @@ class RestService : IntentService("RestService") {
         val resultList: MutableList<DataItem> = mutableListOf()
         resultList.addAll(users)
         resultList.addAll(repositories)
-        resultIntent.putParcelableArrayListExtra(RestKey.DATA_STRING, ArrayList(resultList))
+        resultIntent.putParcelableArrayListExtra(RestKey.DATA, ArrayList(resultList))
     }
 
     private fun getStarCount() {
