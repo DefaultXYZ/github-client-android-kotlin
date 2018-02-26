@@ -8,6 +8,7 @@ import com.defaultxyz.githubclient.network.service.RestFunction
 import com.defaultxyz.githubclient.network.service.RestKey
 import com.defaultxyz.githubclient.network.service.RestService
 import com.defaultxyz.githubclient.ui.details.DetailsActivity
+import com.defaultxyz.githubclient.ui.details.USER_KEY
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -23,20 +24,27 @@ class DetailsViewTest {
     private lateinit var activity: DetailsActivity
 
     private lateinit var usernameText: TextView
+    private lateinit var starLabel: TextView
 
     @Before
     fun setUp() {
-        controller = Robolectric.buildActivity(DetailsActivity::class.java)
+        val mockUser = User(123, "abc")
+        mockUser.avatarUrl = "mockAvatarUrl"
+        mockUser.starredUrl = "mockStarredUrl"
+        val intent = Intent()
+        intent.putExtra(USER_KEY, mockUser)
+        controller = Robolectric.buildActivity(DetailsActivity::class.java, intent)
                 .create().start().visible()
         activity = controller.get()
         usernameText = activity.findViewById(R.id.username)
+        starLabel = activity.findViewById(R.id.star_label)
     }
 
     @Test
     fun onLoadScreen_requestDetails() {
         val expectedIntent = Intent(activity, RestService::class.java)
         val expectedAction = RestService.ACTION
-        val expectedFunction = RestFunction.USER_DETAILS
+        val expectedFunction = RestFunction.STAR_COUNT
         val actualIntent = ShadowApplication.getInstance().nextStartedService
 
         assertEquals(expectedIntent.component, actualIntent.component)
@@ -45,13 +53,19 @@ class DetailsViewTest {
     }
 
     @Test
-    fun onDataReceive_displayData() {
-        val mockUser = User(123, "abc")
-        val intent = Intent()
-        intent.putExtra(RestKey.DATA, mockUser)
-
-        activity.onReceive(RestFunction.USER_DETAILS, intent)
-
+    fun onLoadScreen_displayData() {
         assertEquals("abc", usernameText.text.toString())
+    }
+
+    @Test
+    fun onDataReceived_updateStars() {
+        val intent = Intent()
+        intent.putExtra(RestKey.DATA_INT, 12)
+
+        activity.onReceive(RestFunction.STAR_COUNT, intent)
+
+        val starText = starLabel.text.toString()
+        val actual = starText.toIntOrNull()
+        assertEquals(12, actual)
     }
 }

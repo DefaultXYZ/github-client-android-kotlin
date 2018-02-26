@@ -66,6 +66,7 @@ class MainActivity : BaseActivity(), MainContract.View, DependencyComponent, Res
 
     override fun onError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        setLoading(false)
     }
 
     override fun injectComponent(application: MainApplication) {

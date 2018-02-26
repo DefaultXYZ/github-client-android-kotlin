@@ -69,9 +69,10 @@ object RestKey {
     const val FUNCTION = "RestFunction"
     const val ERROR = "RestError"
     const val DATA_STRING = "RestDataString"
+    const val DATA_INT = "RestDataInt"
     const val DATA = "RestData"
 }
 
 enum class RestFunction {
-    SEARCH, USER_DETAILS
+    SEARCH, STAR_COUNT
 }
