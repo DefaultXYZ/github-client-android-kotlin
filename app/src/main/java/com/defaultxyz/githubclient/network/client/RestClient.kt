@@ -6,4 +6,5 @@ import com.defaultxyz.githubclient.model.User
 interface RestClient {
     fun searchUsers(query: String): List<User>
     fun searchRepositories(query: String): List<Repository>
+    fun getStarCount(login: String): Int
 }

@@ -4,6 +4,7 @@ import com.defaultxyz.githubclient.model.SearchRepositoryResponse
 import com.defaultxyz.githubclient.model.SearchUserResponse
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RetrofitClient {
@@ -12,4 +13,7 @@ interface RetrofitClient {
 
     @GET("search/repositories?per_page=100")
     fun searchRepositories(@Query("q") query: String): Call<SearchRepositoryResponse>
+
+    @GET("users/{login}/starred")
+    fun getStarredItems(@Path("login") login: String): Call<List<Any>>
 }

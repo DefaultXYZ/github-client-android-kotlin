@@ -11,7 +11,11 @@ class RestClientImpl @Inject constructor(
         val response = retrofitClient.searchUsers(query).execute()
         if (response.isSuccessful) {
             val body = response.body() ?: return emptyList()
-            return body.items.map { User(it.id, it.login) }
+            return body.items.map {
+                val user = User(it.id, it.login)
+                user.avatarUrl = it.avatarUrl
+                user
+            }
         }
         return emptyList()
     }
@@ -23,5 +27,12 @@ class RestClientImpl @Inject constructor(
             return body.items.map { Repository(it.id, it.fullName) }
         }
         return emptyList()
+    }
+
+    override fun getStarCount(login: String): Int {
+        val response = retrofitClient.getStarredItems(login).execute()
+        if (response.isSuccessful)
+            return response.body()?.size ?: -1
+        return -1
     }
 }

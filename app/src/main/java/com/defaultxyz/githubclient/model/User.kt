@@ -8,15 +8,12 @@ data class User(override var id: Long,
                 val login: String) : DataItem(id, login) {
     @SerializedName("avatar_url")
     var avatarUrl: String? = null
-    @SerializedName("starred_url")
-    var starredUrl: String? = null
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.writeLong(id)
         dest?.writeString(login)
         dest?.writeString(title)
         dest?.writeString(avatarUrl)
-        dest?.writeString(starredUrl)
     }
 
     override fun describeContents(): Int {
@@ -28,9 +25,9 @@ data class User(override var id: Long,
             override fun createFromParcel(src: Parcel?): User {
                 val id = src?.readLong() ?: 0
                 val login = src?.readString() ?: ""
+                src?.readString()
                 val user = User(id, login)
                 user.avatarUrl = src?.readString()
-                user.starredUrl = src?.readString()
                 return user
             }
 

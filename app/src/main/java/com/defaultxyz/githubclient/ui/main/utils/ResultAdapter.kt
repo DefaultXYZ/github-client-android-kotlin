@@ -14,6 +14,7 @@ import com.defaultxyz.githubclient.model.DataItem
 import com.defaultxyz.githubclient.model.Repository
 import com.defaultxyz.githubclient.model.User
 import com.defaultxyz.githubclient.ui.details.DetailsActivity
+import com.defaultxyz.githubclient.ui.details.USER_KEY
 
 class ResultAdapter(private val context: Context)
     : RecyclerView.Adapter<ResultAdapter.DataItemHolder>() {
@@ -37,6 +38,7 @@ class ResultAdapter(private val context: Context)
         if (holder.type == ItemType.USER) {
             holder.container.setOnClickListener {
                 val intent = Intent(context, DetailsActivity::class.java)
+                intent.putExtra(USER_KEY, item as User)
                 context.startActivity(intent)
             }
         }

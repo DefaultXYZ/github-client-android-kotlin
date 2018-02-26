@@ -5,7 +5,9 @@ import com.google.gson.annotations.SerializedName
 data class UserResponse(@SerializedName("id")
                         val id: Long,
                         @SerializedName("login")
-                        val login: String)
+                        val login: String,
+                        @SerializedName("avatar_url")
+                        val avatarUrl: String)
 
 data class RepositoryResponse(@SerializedName("id")
                               val id: Long,

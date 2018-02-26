@@ -17,6 +17,7 @@ import com.defaultxyz.githubclient.network.service.RestListener
 import com.defaultxyz.githubclient.ui.MainApplication
 import com.defaultxyz.githubclient.ui.base.BaseActivity
 import com.defaultxyz.githubclient.ui.utils.DependencyComponent
+import com.squareup.picasso.Picasso
 
 const val USER_KEY = "DetailsActivity.UserKey"
 
@@ -33,7 +34,10 @@ class DetailsActivity : BaseActivity(), DependencyComponent, RestListener {
         setLoading(true)
         val user = intent.getParcelableExtra<User>(USER_KEY)
         usernameView.text = user.login
-        user.starredUrl?.let { startRestService(RestFunction.STAR_COUNT, it) }
+        startRestService(RestFunction.STAR_COUNT, user.login)
+        user.avatarUrl?.let {
+            Picasso.with(this).load(it).into(avatarView)
+        }
     }
 
     override fun onReceive(function: RestFunction, intent: Intent) {
