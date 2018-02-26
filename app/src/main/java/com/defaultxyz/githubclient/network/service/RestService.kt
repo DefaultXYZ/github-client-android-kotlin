@@ -51,7 +51,7 @@ class RestService : IntentService("RestService") {
         val resultList: MutableList<DataItem> = mutableListOf()
         resultList.addAll(users)
         resultList.addAll(repositories)
-        resultIntent.putParcelableArrayListExtra(RestKey.DATA_STRING, ArrayList(resultList))
+        resultIntent.putParcelableArrayListExtra(RestKey.DATA, ArrayList(resultList))
     }
 
     private fun checkInternetConnection() {
@@ -69,8 +69,9 @@ object RestKey {
     const val FUNCTION = "RestFunction"
     const val ERROR = "RestError"
     const val DATA_STRING = "RestDataString"
+    const val DATA = "RestData"
 }
 
 enum class RestFunction {
-    SEARCH
+    SEARCH, USER_DETAILS
 }
