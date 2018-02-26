@@ -13,7 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-class NetworkModule {
+open class NetworkModule {
 
     @Provides
     @PerApplication
@@ -40,7 +40,7 @@ class NetworkModule {
 
     @Provides
     @PerApplication
-    fun providesRestClient(retrofitClient: RetrofitClient): RestClient {
+    open fun providesRestClient(retrofitClient: RetrofitClient): RestClient {
         return RestClientImpl(retrofitClient)
     }
 }

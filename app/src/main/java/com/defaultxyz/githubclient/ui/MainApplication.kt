@@ -9,13 +9,17 @@ import com.defaultxyz.githubclient.injection.main.DaggerMainComponent
 import com.defaultxyz.githubclient.injection.main.MainComponent
 import com.defaultxyz.githubclient.injection.main.MainModule
 
-class MainApplication : Application() {
+open class MainApplication : Application() {
     lateinit var coreComponent: CoreComponent
     private var mainComponent: MainComponent? = null
 
     override fun onCreate() {
         super.onCreate()
-        coreComponent = DaggerCoreComponent.builder()
+        coreComponent = buildCoreComponent()
+    }
+
+    open fun buildCoreComponent(): CoreComponent {
+        return DaggerCoreComponent.builder()
                 .appModule(AppModule(this))
                 .networkModule(NetworkModule())
                 .build()
