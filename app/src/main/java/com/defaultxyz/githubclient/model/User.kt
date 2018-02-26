@@ -5,11 +5,13 @@ import android.os.Parcelable
 
 data class User(override var id: Long,
                 val login: String) : DataItem(id, login) {
+    var avatarUrl: String? = null
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
         dest?.writeLong(id)
         dest?.writeString(login)
         dest?.writeString(title)
+        dest?.writeString(avatarUrl)
     }
 
     override fun describeContents(): Int {
@@ -21,7 +23,10 @@ data class User(override var id: Long,
             override fun createFromParcel(src: Parcel?): User {
                 val id = src?.readLong() ?: 0
                 val login = src?.readString() ?: ""
-                return User(id, login)
+                val user = User(id, login)
+                src?.readString()
+                user.avatarUrl = src?.readString()
+                return user
             }
 
             override fun newArray(size: Int): Array<User> {

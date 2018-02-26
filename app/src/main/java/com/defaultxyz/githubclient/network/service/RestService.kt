@@ -42,6 +42,7 @@ class RestService : IntentService("RestService") {
     private fun sendRequest() {
         when (currentFunction) {
             RestFunction.SEARCH -> doSearch()
+            RestFunction.STAR_COUNT -> getStarCount()
         }
     }
 
@@ -52,6 +53,11 @@ class RestService : IntentService("RestService") {
         resultList.addAll(users)
         resultList.addAll(repositories)
         resultIntent.putParcelableArrayListExtra(RestKey.DATA, ArrayList(resultList))
+    }
+
+    private fun getStarCount() {
+        val starCount = restClient.getStarCount(dataString)
+        resultIntent.putExtra(RestKey.DATA_INT, starCount)
     }
 
     private fun checkInternetConnection() {
@@ -69,9 +75,10 @@ object RestKey {
     const val FUNCTION = "RestFunction"
     const val ERROR = "RestError"
     const val DATA_STRING = "RestDataString"
+    const val DATA_INT = "RestDataInt"
     const val DATA = "RestData"
 }
 
 enum class RestFunction {
-    SEARCH, USER_DETAILS
+    SEARCH, STAR_COUNT
 }
