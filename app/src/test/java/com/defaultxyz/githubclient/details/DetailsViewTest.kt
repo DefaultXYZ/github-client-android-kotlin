@@ -30,7 +30,6 @@ class DetailsViewTest {
     fun setUp() {
         val mockUser = User(123, "abc")
         mockUser.avatarUrl = "mockAvatarUrl"
-        mockUser.starredUrl = "mockStarredUrl"
         val intent = Intent()
         intent.putExtra(USER_KEY, mockUser)
         controller = Robolectric.buildActivity(DetailsActivity::class.java, intent)
