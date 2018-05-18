@@ -24,16 +24,15 @@ class ResultAdapter(private val context: Context)
         this.data = data
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DataItemHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataItemHolder {
         val inflater = LayoutInflater.from(context)
         val type = ItemType.fromCode(viewType)
         val view = inflater.inflate(type.layout, parent, false)
         return DataItemHolder(view, type)
     }
 
-    override fun onBindViewHolder(holder: DataItemHolder?, position: Int) {
+    override fun onBindViewHolder(holder: DataItemHolder, position: Int) {
         val item = data[position]
-        if (holder == null) return
         holder.title.text = item.title
         if (holder.type == ItemType.USER) {
             holder.container.setOnClickListener {
